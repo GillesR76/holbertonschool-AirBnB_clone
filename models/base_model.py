@@ -65,12 +65,3 @@ class BaseModel:
         dict_copy["created_at"] = self.created_at.isoformat()
         dict_copy["updated_at"] = self.updated_at.isoformat()
         return dict_copy
-
-    def test_to_dict(self):
-        model_dict = self.model.to_dict()
-        self.assertEqual(model_dict["__class__"], "BaseModel")
-        self.assertEqual(model_dict["id"], self.model.id)
-        self.assertEqual(model_dict["created_at"],
-                         self.model.created_at.isoformat())
-        self.assertEqual(model_dict["updated_at"],
-                         self.model.updated_at.isoformat())
