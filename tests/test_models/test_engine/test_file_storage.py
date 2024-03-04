@@ -29,18 +29,12 @@ class TestFileStorage(unittest.TestCase):
             self.assertIn(obj.id, file.read())
 
     def test_reload(self):
-        try:
-            with open('file.json', 'r') as file:
-                json.load(file)
-        except json.JSONDecodeError:
-            self.fail("file.json is not a valid JSON file")
-        self.storage.reload()
-        self.assertIsInstance(self.storage.all(), dict)
+        file_storage = FileStorage()
+        base_model = BaseModel()
+        file_storage.new(base_model)
+        file_storage.save()
 
-        with self.assertRaises(FileNotFoundError):
-            try:
-                with open('fake.json', 'r') as file:
-                    json.load(file)
-            except json.JSONDecodeError:
-                self.fail("file.json is not a valid JSON file")
-            self.storage.reload()
+        file_storage2 = FileStorage()
+        file_storage2.reload()
+        obj_key = "BaseModel." + base_model.id
+        self.assertIn(obj_key, file_storage2._FileStorage__objects)
