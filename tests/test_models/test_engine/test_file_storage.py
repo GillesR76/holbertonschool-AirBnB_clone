@@ -36,3 +36,11 @@ class TestFileStorage(unittest.TestCase):
             self.fail("file.json is not a valid JSON file")
         self.storage.reload()
         self.assertIsInstance(self.storage.all(), dict)
+
+        with self.assertRaises(FileNotFoundError):
+            try:
+                with open('fake.json', 'r') as file:
+                    json.load(file)
+            except json.JSONDecodeError:
+                self.fail("file.json is not a valid JSON file")
+            self.storage.reload()
