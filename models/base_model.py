@@ -42,7 +42,7 @@ class BaseModel:
 
     def __str__(self):
         """str method that returns a string representation of an object"""
-        return f"{[self.__class__.__name__]} {(self.id)} {self.__dict__}"
+        return f"{[self.__class__.__name__]} ({self.id}) {self.__dict__}"
 
     def save(self):
         """Public instance method that updates updated_at with the
@@ -58,3 +58,12 @@ class BaseModel:
         dict_copy["created_at"] = self.created_at.isoformat()
         dict_copy["updated_at"] = self.updated_at.isoformat()
         return dict_copy
+
+    def test_to_dict(self):
+        model_dict = self.model.to_dict()
+        self.assertEqual(model_dict["__class__"], "BaseModel")
+        self.assertEqual(model_dict["id"], self.model.id)
+        self.assertEqual(model_dict["created_at"],
+                         self.model.created_at.isoformat())
+        self.assertEqual(model_dict["updated_at"],
+                         self.model.updated_at.isoformat())
