@@ -11,6 +11,15 @@ class TestBaseModel(unittest.TestCase):
         self.model = BaseModel()
 
     def test_init(self):
+        model_dict = self.model.to_dict()
+        self.model = BaseModel(**model_dict)
+
+        self.assertEqual(model_dict["id"], self.model.id)
+        self.assertEqual(model_dict["created_at"],
+                         self.model.created_at.isoformat())
+        self.assertEqual(model_dict["updated_at"],
+                         self.model.updated_at.isoformat())
+
         self.assertIsInstance(self.model.id, str)
         self.assertIsInstance(self.model.created_at, datetime)
         self.assertIsInstance(self.model.updated_at, datetime)
