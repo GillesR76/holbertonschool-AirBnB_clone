@@ -17,7 +17,38 @@ a JSON file and deserializes JSON file to instances:
 """
 
 import json
+from os.path import exists
 
 class FileStorage:
+    """
+    class Filestorage
+    """
+    __file_path = 'file.json'
+    __objects = {}
+
+    def all(self):
+        """
+        Method all
+        """
+        return self.__objects
     
+    def new(self, obj):
+        """
+        New method
+        """
+        self.__objects["{}.{}".format(obj.__class__.__name__, obj.id)] = obj.to_dict()
     
+    def save(self):
+        """
+        save method
+        """
+        with open(self.__file_path, 'w', encoding="utf-8") as file:
+            json.dump(self.__objects, file)
+    
+    def reload(self):
+        """reload method"""
+        if not exists(self.__file_path):
+            return
+        
+        with open(self.__file_path, 'r', encoding="utf-8") as file:
+            return json.load(file)
