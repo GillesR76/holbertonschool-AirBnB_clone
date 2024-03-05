@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 
-import json
 import unittest
+import os
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
 
@@ -10,6 +10,7 @@ from models.base_model import BaseModel
 class TestFileStorage(unittest.TestCase):
     def setUp(self):
         self.storage = FileStorage()
+        self.file_path = self.storage._FileStorage__file_path
 
     def test_all(self):
         all_objs = self.storage.all()
@@ -29,10 +30,26 @@ class TestFileStorage(unittest.TestCase):
             self.assertIn(obj.id, file.read())
 
     def test_reload(self):
-        with open(self.storage._FileStorage__file_path, 'w') as f:
-            f.write('{"invalid json')
+        # Create a new object and save it
+        base_model = BaseModel()
+        self.storage.new(base_model)
+        self.storage.save()
 
+        # Clear the __objects dictionary and reload from file
+        self.storage._FileStorage__objects = {}
+        self.storage.reload()
+
+        # Check if the object was correctly loaded
+        obj_key = "BaseModel." + base_model.id
+        self.assertIn(obj_key, self.storage._FileStorage__objects)
+
+        # Remove the file and try to reload
+        os.remove(self.file_path)
         try:
             self.storage.reload()
-        except json.JSONDecodeError:
-            self.fail("reload raised JSONDecodeError with invalid JSON")
+        except FileNotFoundError:
+            self.fail("FileNotFoundError was raised")
+
+
+if __name__ == "__main__":
+    unittest.main()
