@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 
+import json
 import unittest
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
@@ -28,5 +29,10 @@ class TestFileStorage(unittest.TestCase):
             self.assertIn(obj.id, file.read())
 
     def test_reload(self):
+        try:
+            with open('file.json', 'r') as file:
+                json.load(file)
+        except json.JSONDecodeError:
+            self.fail("file.json is not a valid JSON file")
         self.storage.reload()
         self.assertIsInstance(self.storage.all(), dict)
