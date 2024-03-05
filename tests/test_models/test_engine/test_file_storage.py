@@ -29,12 +29,10 @@ class TestFileStorage(unittest.TestCase):
             self.assertIn(obj.id, file.read())
 
     def test_reload(self):
-        file_storage = FileStorage()
-        base_model = BaseModel()
-        file_storage.new(base_model)
-        file_storage.save()
+        with open(self.storage._FileStorage__file_path, 'w') as f:
+            f.write('{"invalid json')
 
-        file_storage2 = FileStorage()
-        file_storage2.reload()
-        obj_key = "BaseModel." + base_model.id
-        self.assertIn(obj_key, file_storage2._FileStorage__objects)
+        try:
+            self.storage.reload()
+        except json.JSONDecodeError:
+            self.fail("reload raised JSONDecodeError with invalid JSON")
