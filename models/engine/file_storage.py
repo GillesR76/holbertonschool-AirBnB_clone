@@ -13,11 +13,12 @@ a JSON file and deserializes JSON file to instances:
     all(self): returns the dictionary __objects
     new(self, obj): sets in __objects the obj with key <obj class name>.id
     save(self): serializes __objects to the JSON file (path: __file_path)
-    reload(self): deserializes the JSON file to __objects (only if the JSON file
+    reload(self): deserializes the JSON file to __objects
+    (only if the JSON file
 """
 
 import json
-from os.path import exists
+
 
 class FileStorage:
     """
@@ -31,24 +32,33 @@ class FileStorage:
         Method all
         """
         return self.__objects
-    
+
     def new(self, obj):
         """
         New method
         """
-        self.__objects["{}.{}".format(obj.__class__.__name__, obj.id)] = obj.to_dict()
-    
+        key = f"{obj.__class__.__name__}.{obj.id}"
+        self.__objects[key] = obj
+
     def save(self):
         """
         save method
         """
+        obj_dict = {}
+        for key, value in self.__objects.items():
+            obj_dict[key] = value.to_dict()
         with open(self.__file_path, 'w', encoding="utf-8") as file:
-            json.dump(self.__objects, file)
-    
+            json.dump(obj_dict, file)
+
     def reload(self):
         """reload method"""
-        if not exists(self.__file_path):
-            return
-        
-        with open(self.__file_path, 'r', encoding="utf-8") as file:
-            return json.load(file)
+        try:
+            with open(self.__file_path, 'r') as file:
+                obj_dict = json.load(file)
+                from models.base_model import BaseModel
+                for key, value in obj_dict.items():
+                    class_name, obj_id = key.split('.')
+                    obj = eval(class_name)(**value)
+                    self.__objects[key] = obj
+        except Exception:
+            pass
