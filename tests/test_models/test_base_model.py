@@ -15,10 +15,15 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(str(self.model), expected_output)
 
     def test_save(self):
-        old_updated_at = self.model.updated_at
+        original_updated_at = self.model.updated_at
         self.model.save()
-        self.assertNotEqual(self.model.updated_at, old_updated_at)
-        self.assertIsInstance(self.model.updated_at, datetime)
+        new_updated_at = self.model.updated_at
+        self.assertNotEqual(original_updated_at, new_updated_at)
+
+        new_model = BaseModel()
+        new_model.save()
+        with open('file.json', 'r') as file:
+            self.assertIn("BaseModel." + new_model.id, file.read())
 
     def test_to_dict(self):
         model_dict = self.model.to_dict()
