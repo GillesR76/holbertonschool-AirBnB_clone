@@ -30,16 +30,20 @@ class TestFileStorage(unittest.TestCase):
             self.assertIn(obj.id, file.read())
 
     def test_reload(self):
+        # Create a new object and save it
         base_model = BaseModel()
         self.storage.new(base_model)
         self.storage.save()
 
+        # Clear the __objects dictionary and reload from file
         self.storage._FileStorage__objects = {}
         self.storage.reload()
 
+        # Check if the object was correctly loaded
         obj_key = "BaseModel." + base_model.id
         self.assertIn(obj_key, self.storage._FileStorage__objects)
 
+        # Remove the file and try to reload
         os.remove(self.file_path)
         try:
             self.storage.reload()

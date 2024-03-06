@@ -60,5 +60,5 @@ class FileStorage:
                     class_name, obj_id = key.split('.')
                     obj = eval(class_name)(**value)
                     self.__objects[key] = obj
-        except FileNotFoundError:
+        except Exception:
             pass
