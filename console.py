@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 """This is a new module"""
 import cmd
-from models.base_model import BaseModel
+from models import storage
 
 
 class  HBNBCommand(cmd.Cmd):
     """This is a new module"""
+
     def preloop(self):
         """To display a prompt"""
         self.prompt = '(hbnb) '
@@ -64,6 +65,37 @@ class  HBNBCommand(cmd.Cmd):
     def do_update(self, line):
         """update command"""
         pass
+
+    def do_create(self, arg):
+        """To create a new instance of the class BaseModel"""
+        args = arg.split()
+        if len(args) == 0:
+            print("** class name missing **")
+        elif args[0] is not "BaseModel":
+            print("** class doesn't exist **")
+        else:
+            new_instance = BaseModel()
+            new_instance.save()
+            print(new_instance.id)
+
+    def do_show(self, arg):
+        """To print the string representation of an instance based
+        on the class name and id"""
+        args = arg.split()
+        if len(args) == 0:
+            print("** class name missing **")
+        elif args[0] is not "BaseModel":
+            print("** class doesn't exist **")
+        elif len(args) < 2:
+            print("** instance id missing **")
+        else:
+            objs = storage.all()
+            for dict in objs:
+                if "id" in objs.keys and dict["id"] == args[1]:
+                    instance = BaseModel(**dict)
+                    print(instance)
+                else:
+                    print("** no instance found **")
 
 
 if __name__ == '__main__':
