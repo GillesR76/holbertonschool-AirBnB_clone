@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 """This is a new module"""
 import cmd
+from models.base_model import BaseModel
 
 
-class MyCmd(cmd.Cmd):
+class  HBNBCommand(cmd.Cmd):
     """This is a new module"""
     def preloop(self):
         """To display a prompt"""
@@ -35,10 +36,38 @@ class MyCmd(cmd.Cmd):
     def do_EOF(self, line):
         """To quit the program"""
         raise EOFError
+    
+    def do_create(self, line):
+        """It creates and Serialize"""
+        a_classes = ["BaseModel"]
+        if line.split()[0] in a_classes:
+            obj = BaseModel()
+            obj.save()
+            print("{}".format(obj.id))    
+        elif not line.split()[0] in a_classes:
+            print("** class doesn't exist **")
+        else:
+            print("** class name missing **")
+
+    def do_show(self, line):
+        """show command"""
+        pass
+
+    def do_destroy(self, line):
+        """destroy command"""
+        a_
+
+    def do_all(self, line):
+        """all command"""
+        pass
+
+    def do_update(self, line):
+        """update command"""
+        pass
 
 
 if __name__ == '__main__':
     try:
-        MyCmd().cmdloop()
+        HBNBCommand().cmdloop()
     except (KeyboardInterrupt, EOFError):
         pass
