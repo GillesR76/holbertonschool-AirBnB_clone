@@ -5,6 +5,7 @@ import unittest
 import os
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
+from models.user import User
 
 
 class TestFileStorage(unittest.TestCase):
@@ -31,14 +32,18 @@ class TestFileStorage(unittest.TestCase):
 
     def test_reload(self):
         base_model = BaseModel()
+        user = User()
         self.storage.new(base_model)
+        self.storage.new(user)
         self.storage.save()
 
         self.storage._FileStorage__objects = {}
         self.storage.reload()
 
-        obj_key = "BaseModel." + base_model.id
-        self.assertIn(obj_key, self.storage._FileStorage__objects)
+        base_model_key = "BaseModel." + base_model.id
+        user_key = "User." + user.id
+        self.assertIn(base_model_key, self.storage._FileStorage__objects)
+        self.assertIn(user_key, self.storage._FileStorage__objects)
 
         os.remove(self.file_path)
         try:
