@@ -9,17 +9,20 @@ import unittest
 from models.user import User
 from datetime import datetime
 
+
 class TestUser(unittest.TestCase):
     """
     User tester class
 
     """
+
     def test_init(self):
         """
         This is a method
 
         """
-        user = User(email="test@example.com", password="password123", first_name="John", last_name="Doe")
+        user = User(email="test@example.com", password="password123",
+                    first_name="John", last_name="Doe")
         self.assertIsInstance(user.id, str)
         self.assertIsInstance(user.created_at, datetime)
         self.assertIsInstance(user.updated_at, datetime)
@@ -40,9 +43,10 @@ class TestUser(unittest.TestCase):
     def test_to_dict(self):
         """
         This is a other on method
-        
+
         """
-        user = User(email="test@example.com", password="password123", first_name="John", last_name="Doe")
+        user = User(email="test@example.com", password="password123",
+                    first_name="John", last_name="Doe")
         user_dict = user.to_dict()
         self.assertIsInstance(user_dict, dict)
         self.assertIn('__class__', user_dict)
@@ -65,6 +69,12 @@ class TestUser(unittest.TestCase):
         self.assertIn('last_name', user_dict)
         self.assertIsInstance(user_dict['last_name'], str)
         self.assertEqual(user_dict['last_name'], "Doe")
+
+    def test_user_email(self):
+        user = User(email="test@example.com", password="password123",
+                    first_name="John", last_name="Doe")
+        self.assertEqual(user.email, "test@example.com")
+
 
 if __name__ == '__main__':
     unittest.main()
