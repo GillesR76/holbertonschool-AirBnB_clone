@@ -20,6 +20,7 @@ a JSON file and deserializes JSON file to instances:
 import json
 import os
 
+
 class FileStorage:
     """
     class Filestorage
@@ -50,7 +51,7 @@ class FileStorage:
         try:
             with open(self.__file_path, 'w', encoding="utf-8") as file:
                 json.dump(objects_dict, file)
-        except:
+        except Exception:
             pass
 
     def reload(self):
