@@ -4,7 +4,7 @@ import cmd
 from models import storage
 
 
-class  HBNBCommand(cmd.Cmd):
+class HBNBCommand(cmd.Cmd):
     """This is a new module"""
 
     def preloop(self):
@@ -37,10 +37,10 @@ class  HBNBCommand(cmd.Cmd):
     def do_EOF(self, line):
         """To quit the program"""
         raise EOFError
-    
+
     def do_create(self, arg):
         """To create a new instance of the class BaseModel"""
-        from models.base_model import  BaseModel
+        from models.base_model import BaseModel
         from models.user import User
         from models.state import State
         from models.city import City
@@ -48,9 +48,9 @@ class  HBNBCommand(cmd.Cmd):
         from models.place import Place
         from models.review import Review
 
-        a_classes = {"BaseModel" : BaseModel, "User" : User, "State" : State,
-                    "City" : City, "Amenity" : Amenity, "Place": Place,
-                    "Review" : Review}
+        a_classes = {"BaseModel": BaseModel, "User": User, "State": State,
+                     "City": City, "Amenity": Amenity, "Place": Place,
+                     "Review": Review}
         args = arg.split()
 
         if len(args) == 0:
@@ -65,7 +65,7 @@ class  HBNBCommand(cmd.Cmd):
     def do_show(self, arg):
         """To print the string representation of an instance based
         on the class name and id"""
-        from models.base_model import  BaseModel
+        from models.base_model import BaseModel
         from models.user import User
         from models.state import State
         from models.city import City
@@ -73,9 +73,9 @@ class  HBNBCommand(cmd.Cmd):
         from models.place import Place
         from models.review import Review
 
-        a_classes = {"BaseModel" : BaseModel, "User" : User, "State" : State,
-                    "City" : City, "Amenity" : Amenity, "Place": Place,
-                    "Review" : Review}
+        a_classes = {"BaseModel": BaseModel, "User": User, "State": State,
+                     "City": City, "Amenity": Amenity, "Place": Place,
+                     "Review": Review}
         args = arg.split()
         if len(args) == 0:
             print("** class name missing **")
@@ -101,7 +101,7 @@ class  HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, line):
         """destroy command"""
-        from models.base_model import  BaseModel
+        from models.base_model import BaseModel
         from models.user import User
         from models.state import State
         from models.city import City
@@ -111,9 +111,9 @@ class  HBNBCommand(cmd.Cmd):
 
         args = line.split()
 
-        a_classes = {"BaseModel" : BaseModel, "User" : User, "State" : State,
-                    "City" : City, "Amenity" : Amenity, "Place": Place,
-                    "Review" : Review}
+        a_classes = {"BaseModel": BaseModel, "User": User, "State": State,
+                     "City": City, "Amenity": Amenity, "Place": Place,
+                     "Review": Review}
         obj_key = args[0] + '.' + args[1]
         if len(args) < 1:
             print("** class name missing **")
@@ -124,9 +124,9 @@ class  HBNBCommand(cmd.Cmd):
         elif len(args) < 2:
             print("** instance id missing **")
             return
-        elif  obj_key not in storage.all().keys():
-                print("** no instance found **")
-                return
+        elif obj_key not in storage.all().keys():
+            print("** no instance found **")
+            return
         else:
             storage.all().pop(obj_key)
             storage.save()
@@ -141,9 +141,9 @@ class  HBNBCommand(cmd.Cmd):
         from models.place import Place
         from models.review import Review
 
-        a_classes = {"BaseModel" : BaseModel, "User" : User, "State" : State,
-                    "City" : City, "Amenity" : Amenity, "Place": Place,
-                    "Review" : Review}
+        a_classes = {"BaseModel": BaseModel, "User": User, "State": State,
+                     "City": City, "Amenity": Amenity, "Place": Place,
+                     "Review": Review}
         args = line.split()
 
         if len(args) == 1:
@@ -151,7 +151,7 @@ class  HBNBCommand(cmd.Cmd):
             if class_name not in a_classes:
                 print("** class doesn't exist **")
                 return
-            
+
             objects = storage.all().values()
             result = []
             class_inst = eval(class_name)
@@ -182,9 +182,9 @@ class  HBNBCommand(cmd.Cmd):
         from models.place import Place
         from models.review import Review
 
-        a_classes = {"BaseModel" : BaseModel, "User" : User, "State" : State,
-                    "City" : City, "Amenity" : Amenity, "Place": Place,
-                    "Review" : Review}
+        a_classes = {"BaseModel": BaseModel, "User": User, "State": State,
+                     "City": City, "Amenity": Amenity, "Place": Place,
+                     "Review": Review}
         args = arg.split()
         if len(args) == 0:
             print("** class name missing **")
@@ -206,11 +206,11 @@ class  HBNBCommand(cmd.Cmd):
             if len(args) < 3:
                 print("** attribute name missing **")
                 return
-            
+
             if len(args) < 4:
                 print("** value missing **")
                 return
-            
+
             if arg[2] in ['id', 'created_at', 'updated_at']:
                 return
 
