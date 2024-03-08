@@ -114,7 +114,6 @@ class HBNBCommand(cmd.Cmd):
         a_classes = {"BaseModel": BaseModel, "User": User, "State": State,
                      "City": City, "Amenity": Amenity, "Place": Place,
                      "Review": Review}
-        obj_key = args[0] + '.' + args[1]
         if len(args) < 1:
             print("** class name missing **")
             return
@@ -124,10 +123,11 @@ class HBNBCommand(cmd.Cmd):
         elif len(args) < 2:
             print("** instance id missing **")
             return
-        elif obj_key not in storage.all().keys():
+        elif args[0] + '.' + args[1] not in storage.all().keys():
             print("** no instance found **")
             return
         else:
+            obj_key = args[0] + '.' + args[1]
             storage.all().pop(obj_key)
             storage.save()
 
