@@ -28,6 +28,15 @@ class TestUser(unittest.TestCase):
         self.assertEqual(user.first_name, "John")
         self.assertEqual(user.last_name, "Doe")
 
+        userFake = User()
+        self.assertIsInstance(userFake.id, str)
+        self.assertIsInstance(userFake.created_at, datetime)
+        self.assertIsInstance(userFake.updated_at, datetime)
+        self.assertEqual(userFake.email, "")
+        self.assertEqual(userFake.password, "")
+        self.assertEqual(userFake.first_name, "")
+        self.assertEqual(userFake.last_name, "")
+
     def test_to_dict(self):
         """
         This is a other on method
