@@ -27,6 +27,10 @@ class TestBaseModel(unittest.TestCase):
         new_model.save()
         with open('file.json', 'r') as file:
             self.assertIn("BaseModel." + new_model.id, file.read())
+        
+        with self.assertRaises(FileNotFoundError):
+            with open('lol.json', 'r', encoding="utf8") as file:
+                self.assertIn("BaseModel." + new_model.id, file.read())
 
     def test_to_dict(self):
         model_dict = self.model.to_dict()
