@@ -20,6 +20,9 @@ class TestUser(unittest.TestCase):
 
         """
         user = User(email="test@example.com", password="password123", first_name="John", last_name="Doe")
+        self.assertIsInstance(user.id, str)
+        self.assertIsInstance(user.created_at, datetime)
+        self.assertIsInstance(user.updated_at, datetime)
         self.assertEqual(user.email, "test@example.com")
         self.assertEqual(user.password, "password123")
         self.assertEqual(user.first_name, "John")
