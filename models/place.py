@@ -46,9 +46,10 @@ class Place(BaseModel):
         super().__init__(*args, **kwargs)
         if kwargs:
             for key, value in kwargs.items():
-                if key in ['city_id', 'user_id', 'name', 'description', 'number_rooms',
-                            'number_bathrooms', 'max_guest', 'price_by_night',
-                           'latitude', 'longitude', 'amenity_ids']:
+                if key in ['city_id', 'user_id', 'name', 'description',
+                           'number_rooms', 'number_bathrooms', 'max_guest',
+                           'price_by_night', 'latitude', 'longitude',
+                           'amenity_ids']:
                     if key != "__class__":
                         setattr(self, key, value)
         else:
@@ -62,9 +63,10 @@ class Place(BaseModel):
         except Exception:
             pass
         dict_copy['__class__'] = self.__class__.__name__
-        for attr in ['city_id', 'user_id', 'name', 'description', 'number_rooms',
-                           'number_bathrooms', 'max_guest', 'price_by_night',
-                           'latitude', 'longitude', 'amenity_ids']:
+        for attr in ['city_id', 'user_id', 'name', 'description',
+                     'number_rooms', 'number_bathrooms', 'max_guest',
+                     'price_by_night', 'latitude', 'longitude',
+                     'amenity_ids']:
             if hasattr(self, attr):
                 dict_copy[attr] = getattr(self, attr)
         return dict_copy
