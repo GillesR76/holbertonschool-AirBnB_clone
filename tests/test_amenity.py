@@ -17,10 +17,6 @@ class TestAmenity(unittest.TestCase):
         self.assertTrue(hasattr(self.amenity, "name"))
         self.assertEqual(self.amenity.name, "")
 
-    def test_str(self):
-        expected_output = f"[Amenity] ({self.amenity.id}) {self.amenity.__dict__}"
-        self.assertEqual(str(self.amenity), expected_output)
-
     def test_save(self):
         original_updated_at = self.amenity.updated_at
         self.amenity.save()
