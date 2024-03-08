@@ -19,7 +19,6 @@ a JSON file and deserializes JSON file to instances:
 
 import json
 
-
 class FileStorage:
     """
     class Filestorage
@@ -44,21 +43,34 @@ class FileStorage:
         """
         save method
         """
-        obj_dict = {}
-        for key, value in self.__objects.items():
-            obj_dict[key] = value.to_dict()
+        objects_dict = {}
+        for key in self.__objects:
+            objects_dict[key] = self.__objects[key].to_dict()
+
         with open(self.__file_path, 'w', encoding="utf-8") as file:
-            json.dump(obj_dict, file)
+            json.dump(objects_dict, file)
 
     def reload(self):
         """reload method"""
+        from models.base_model import BaseModel
+        from models.user import User
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.place import Place
+        from models.review import Review
         try:
             with open(self.__file_path, 'r') as file:
                 obj_dict = json.load(file)
-                from models.base_model import BaseModel
                 for key, value in obj_dict.items():
-                    class_name, obj_id = key.split('.')
-                    obj = eval(class_name)(**value)
+                    class_name = key.split('.')[0]
+                    obj = eval("{}".format(class_name))
+                    for k, v in value.items():
+                        if k != '__class__':
+                            setattr(obj, k, v)
                     self.__objects[key] = obj
-        except Exception:
+        except Exception as e:
             pass
+        """except Exception:
+            print("error")
+            pass"""

@@ -7,7 +7,7 @@ Class Place that inherits from BaseModel
 from models.base_model import BaseModel
 
 
-class Amenity(BaseModel):
+class Place(BaseModel):
     """Class Place that inherits from BaseModel
     Public class Attributes:
         city_id(string): id of the city

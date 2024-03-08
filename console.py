@@ -2,8 +2,6 @@
 """This is a new module"""
 import cmd
 from models import storage
-from models.base_model import BaseModel
-from values import a_classes
 
 
 class  HBNBCommand(cmd.Cmd):
@@ -42,13 +40,17 @@ class  HBNBCommand(cmd.Cmd):
     
     def do_create(self, arg):
         """To create a new instance of the class BaseModel"""
+        from models.base_model import  BaseModel
+        from models.user import User
+        a_classes = {"BaseModel" : BaseModel, "User" : User}
         args = arg.split()
+
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] is not a_classes:
+        elif args[0] not in a_classes:
             print("** class doesn't exist **")
         else:
-            new_instance = BaseModel()
+            new_instance = a_classes[args[0]]()
             new_instance.save()
             print(new_instance.id)
 
@@ -58,7 +60,7 @@ class  HBNBCommand(cmd.Cmd):
         args = arg.split()
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] is not "BaseModel":
+        elif args[0] == "BaseModel":
             print("** class doesn't exist **")
         elif len(args) < 2:
             print("** instance id missing **")
@@ -66,13 +68,19 @@ class  HBNBCommand(cmd.Cmd):
             objs = storage.all()
             for dict in objs:
                 if "id" in objs.keys and dict["id"] == args[1]:
-                    instance = BaseModel(**dict)
+                    from models.base_model import  BaseModel
+                    from models.user import User
+                    a_classes = {"BaseModel" : BaseModel, "User" : User}
+                    instance = a_classes[args[0]](**dict)
                     print(instance)
                 else:
                     print("** no instance found **")
 
     def do_destroy(self, line):
         """destroy command"""
+        from models.base_model import  BaseModel
+        from models.user import User
+        a_classes = {"BaseModel" : BaseModel, "User" : User}
         if len(line.split()) == 0:
             print("** class name missing **")
         elif not line.split()[0] in a_classes:
@@ -91,13 +99,35 @@ class  HBNBCommand(cmd.Cmd):
 
     def do_all(self, line):
         """all command"""
-        pass
+        from models.base_model import BaseModel
+        from models.user import User
+        args = line.split()
+
+        if len(args) == 1:
+            class_name = args[0]
+            try:
+                class_inst = eval(class_name)
+            except NameError:
+                print("** class doesn't exist **")
+                return
+            
+            objects = storage.all().values()
+            result = []
+            for obj in objects:
+                if isinstance(obj, class_inst):
+                    result += [str(obj)]
+
+            if len(result) != 0:
+                print(result)
+            else:
+                print("** no instance found **")
+        else:
+            objects = storage.all().values()
+            print([str(obj) for obj in objects])
 
     def do_update(self, line):
         """update command"""
         pass
-
-
 
 
 if __name__ == '__main__':
