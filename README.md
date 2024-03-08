@@ -95,14 +95,6 @@ $
 ```
 
 ---
-## DESCRIPTION OF THE COMMAND INTERPRETER :
-
-
-
-
-
-
----
 ## FILES
 
 | File | Description |
@@ -117,8 +109,40 @@ command interpreter |
 of the main elements that will structure the AirBnB project |
 
 ---
-## AUTHORS : 
+## DESCRIPTION OF THE COMMAND INTERPRETER :
 
-Arsene Giriteka <giritekaaarsene@gmail.com>
-Gilles Richard <gilles-richard76@hotmail.com>
+### Functions that can be called on the command interpreter:
 
+| Commands | Description |
+| --- | --- |
+| do_help | Displays documentation |
+| do_EOF | Exits the program |
+| do_quit | Exits the program |
+
+### How to launch the command interpreter:
+
+```bash
+./console.py
+(hbnb)
+```
+
+### Usage examples of the command interpreter:
+
+- Create a class:
+```bash
+(hbnb) create BaseModel
+c3cf13cb-b2e1-4cc2-9d05-2e1ddf3c7f28
+```
+
+- Show the string representation of an instance:
+```bash
+(hbnb) show BaseModel c3cf13cb-b2e1-4cc2-9d05-2e1ddf3c7f28
+[BaseModel] (c3cf13cb-b2e1-4cc2-9d05-2e1ddf3c7f28) {'id': 'c3cf13cb-b2e1-4cc2-9d05-2e1ddf3c7f28', 'created_at': datetime.datetime(2024, 3, 8, 20, 30, 34, 7375), 'updated_at': datetime.datetime(2024, 3, 8, 20, 30, 34, 7400)}
+(hbnb) 
+```
+
+- Deleting an instance:
+```bash
+(hbnb) destroy BaseModel c3cf13cb-b2e1-4cc2-9d05-2e1ddf3c7f28
+(hbnb) 
+```
