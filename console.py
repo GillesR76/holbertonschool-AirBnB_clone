@@ -79,10 +79,13 @@ class  HBNBCommand(cmd.Cmd):
         args = arg.split()
         if len(args) == 0:
             print("** class name missing **")
+            return
         elif args[0] not in a_classes.keys():
             print("** class doesn't exist **")
+            return
         elif len(args) < 2:
             print("** instance id missing **")
+            return
         else:
             objs = storage.all()
             for obj in objs.values():
@@ -91,9 +94,10 @@ class  HBNBCommand(cmd.Cmd):
                     obj_dict.pop('__class__')
                     instance = eval(args[0])(**obj_dict)
                     print(str(instance))
-                    break
+                    return
                 else:
                     print("** no instance found **")
+                    return
 
     def do_destroy(self, line):
         """destroy command"""
@@ -105,23 +109,27 @@ class  HBNBCommand(cmd.Cmd):
         from models.place import Place
         from models.review import Review
 
+        args = line.split()
+
         a_classes = {"BaseModel" : BaseModel, "User" : User, "State" : State,
                     "City" : City, "Amenity" : Amenity, "Place": Place,
                     "Review" : Review}
-        if len(line.split()) == 0:
+        obj_key = args[0] + '.' + args[1]
+        if len(args) < 1:
             print("** class name missing **")
-        elif not line.split()[0] in a_classes:
+            return
+        elif not args[0] in a_classes:
             print("** class doesn't exist **")
-        elif len(line.split()) == 1:
+            return
+        elif len(args) < 2:
             print("** instance id missing **")
+            return
+        elif  obj_key not in storage.all().keys():
+                print("** no instance found **")
+                return
         else:
-            save_dict = {}
-            for obj_dict in storage.all():
-                if "id" in obj_dict.keys() and obj_dict["id"] == line.split()[1]:
-                    storage.pop("{}.{}".format(obj_dict["class"], obj_dict["id"]))
-                    break
-                else:
-                    print("** no instance found **")
+            storage.all().pop(obj_key)
+            storage.save()
 
     def do_all(self, line):
         """all command"""
