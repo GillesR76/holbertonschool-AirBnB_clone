@@ -87,17 +87,14 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
             return
         else:
+            keys = storage.all().keys()
+            key = args[0] + '.' + args[1]
+            if key not in keys:
+                print("** no instance found **")
+                return
             objs = storage.all()
-            for obj in objs.values():
-                if obj.to_dict()["id"] == args[1]:
-                    obj_dict = obj.to_dict()
-                    obj_dict.pop('__class__')
-                    instance = eval(args[0])(**obj_dict)
-                    print(str(instance))
-                    return
-                else:
-                    print("** no instance found **")
-                    return
+            instance = objs[key]
+            print(str(instance))
 
     def do_destroy(self, line):
         """destroy command"""
