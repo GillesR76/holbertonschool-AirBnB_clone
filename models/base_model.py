@@ -43,8 +43,8 @@ class BaseModel:
                     value = datetime.fromisoformat(value)
                 if key != "__class__":
                     setattr(self, key, value)
-            
-        if not hasattr(self, 'id'):    
+
+        if not hasattr(self, 'id'):
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = self.created_at
@@ -66,6 +66,7 @@ class BaseModel:
         dict_copy = self.__dict__.copy()
         dict_copy['__class__'] = self.__class__.__name__
         for attr in ['created_at', 'updated_at']:
-            if hasattr(self, attr) and isinstance(getattr(self, attr), datetime):
+            if (hasattr(self, attr) and
+                    isinstance(getattr(self, attr), datetime)):
                 dict_copy[attr] = getattr(self, attr).isoformat()
         return dict_copy
