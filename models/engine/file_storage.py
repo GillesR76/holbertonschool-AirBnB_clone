@@ -58,6 +58,7 @@ class FileStorage:
                 from models.base_model import BaseModel
                 for key, value in obj_dict.items():
                     class_name, obj_id = key.split('.')
+
                     obj = eval(class_name)(**value)
                     self.__objects[key] = obj
         except FileNotFoundError:
