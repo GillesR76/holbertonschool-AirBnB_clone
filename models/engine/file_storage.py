@@ -62,6 +62,9 @@ class FileStorage:
         from models.amenity import Amenity
         from models.place import Place
         from models.review import Review
+
+        if os.path.exists(self.__file_path):
+            return
         try:
             with open(self.__file_path, 'r') as file:
                 if os.path.getsize(self.__file_path) == 0:
