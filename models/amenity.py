@@ -16,17 +16,14 @@ class Amenity(BaseModel):
     name = ""
 
     def init(self, *args, **kwargs):
+        super().__init__(**kwargs)
         if kwargs:
-            super().init()
             for key, value in kwargs.items():
                 if key in ['name']:
                     if key != "__class":
                         setattr(self, key, value)
         else:
             storage.new(self)
-
-    def id(self):
-        return super().id
 
     def to_dict(self):
         """Return a dictionary representation of the instance."""
