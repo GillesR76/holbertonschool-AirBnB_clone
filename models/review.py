@@ -19,6 +19,23 @@ class Review(BaseModel):
     user_id = ""
     text = ""
 
+    def __init__(self, *args, **kwargs):
+        """init instance method to initialize public instance
+        attributes
+        Attributes:
+            id: string
+            created_at: current datetime when an instance is created
+            updated_at: updates datetime when you change the object
+            """
+        super().__init__(*args, **kwargs)
+        if kwargs:
+            for key, value in kwargs.items():
+                if key in ['text', 'user_id', 'text']:
+                    if key != "__class__":
+                        setattr(self, key, value)
+        else:
+            storage.new(self)
+
     def to_dict(self):
         """Return a dictionary representation of the instance."""
         dict_copy = super().to_dict().copy()

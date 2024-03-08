@@ -25,7 +25,7 @@ class Amenity(BaseModel):
             created_at: current datetime when an instance is created
             updated_at: updates datetime when you change the object
             """
-        super().__init__(**kwargs)
+        super().__init__(*args, **kwargs)
         if kwargs:
             for key, value in kwargs.items():
                 if key in ['name']:
