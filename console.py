@@ -1,11 +1,10 @@
 #!/usr/bin/python3
 """This is a new module"""
 import cmd
-from models.base_model import BaseModel
 from models import storage
 
 
-class MyCmd(cmd.Cmd):
+class  HBNBCommand(cmd.Cmd):
     """This is a new module"""
 
     def preloop(self):
@@ -38,37 +37,130 @@ class MyCmd(cmd.Cmd):
     def do_EOF(self, line):
         """To quit the program"""
         raise EOFError
-
+    
     def do_create(self, arg):
         """To create a new instance of the class BaseModel"""
+        from models.base_model import  BaseModel
+        from models.user import User
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.place import Place
+        from models.review import Review
+
+        a_classes = {"BaseModel" : BaseModel, "User" : User, "State" : State,
+                    "City" : City, "Amenity" : Amenity, "Place": Place,
+                    "Review" : Review}
         args = arg.split()
+
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] is not "BaseModel":
+        elif args[0] not in a_classes:
             print("** class doesn't exist **")
         else:
-            new_instance = BaseModel()
+            new_instance = a_classes[args[0]]()
             new_instance.save()
             print(new_instance.id)
 
     def do_show(self, arg):
         """To print the string representation of an instance based
         on the class name and id"""
+        from models.base_model import  BaseModel
+        from models.user import User
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.place import Place
+        from models.review import Review
+
+        a_classes = {"BaseModel" : BaseModel, "User" : User, "State" : State,
+                    "City" : City, "Amenity" : Amenity, "Place": Place,
+                    "Review" : Review}
         args = arg.split()
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] is not "BaseModel":
+        elif args[0] not in a_classes.keys():
             print("** class doesn't exist **")
         elif len(args) < 2:
             print("** instance id missing **")
         else:
             objs = storage.all()
-            for dict in objs:
-                if "id" in objs.keys and dict["id"] == args[1]:
-                    instance = BaseModel(**dict)
-                    print(instance)
+            for obj in objs.values():
+                if obj.to_dict()["id"] == args[1]:
+                    obj_dict = obj.to_dict()
+                    obj_dict.pop('__class__')
+                    instance = eval(args[0])(**obj_dict)
+                    print(str(instance))
+                    break
                 else:
                     print("** no instance found **")
+
+    def do_destroy(self, line):
+        """destroy command"""
+        from models.base_model import  BaseModel
+        from models.user import User
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.place import Place
+        from models.review import Review
+
+        a_classes = {"BaseModel" : BaseModel, "User" : User, "State" : State,
+                    "City" : City, "Amenity" : Amenity, "Place": Place,
+                    "Review" : Review}
+        if len(line.split()) == 0:
+            print("** class name missing **")
+        elif not line.split()[0] in a_classes:
+            print("** class doesn't exist **")
+        elif len(line.split()) == 1:
+            print("** instance id missing **")
+        else:
+            save_dict = {}
+            for obj_dict in storage.all():
+                if "id" in obj_dict.keys() and obj_dict["id"] == line.split()[1]:
+                    storage.pop("{}.{}".format(obj_dict["class"], obj_dict["id"]))
+                    break
+                else:
+                    print("** no instance found **")
+
+    def do_all(self, line):
+        """all command"""
+        from models.base_model import BaseModel
+        from models.user import User
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.place import Place
+        from models.review import Review
+
+        a_classes = {"BaseModel" : BaseModel, "User" : User, "State" : State,
+                    "City" : City, "Amenity" : Amenity, "Place": Place,
+                    "Review" : Review}
+        args = line.split()
+
+        if len(args) == 1:
+            class_name = args[0]
+            if class_name not in a_classes:
+                print("** class doesn't exist **")
+                return
+            
+            objects = storage.all().values()
+            result = []
+            class_inst = eval(class_name)
+            for obj in objects:
+                if isinstance(obj, class_inst):
+                    result.append(str(str(obj)))
+
+            if len(result) != 0:
+                print(result)
+            else:
+                print("** no instance found **")
+        else:
+            objects = storage.all().values()
+            _list = []
+            for obj in objects:
+                _list.append(str(str(obj)))
+            print(_list)
 
     def do_update(self, arg):
         """Updates an instance based on the class name and id
@@ -76,7 +168,15 @@ class MyCmd(cmd.Cmd):
         """
         from models.base_model import BaseModel
         from models.user import User
-        a_classes = {'BaseModel': BaseModel, 'User': User}
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.place import Place
+        from models.review import Review
+
+        a_classes = {"BaseModel" : BaseModel, "User" : User, "State" : State,
+                    "City" : City, "Amenity" : Amenity, "Place": Place,
+                    "Review" : Review}
         args = arg.split()
         if len(args) == 0:
             print("** class name missing **")
@@ -98,21 +198,29 @@ class MyCmd(cmd.Cmd):
             if len(args) < 3:
                 print("** attribute name missing **")
                 return
+            
             if len(args) < 4:
                 print("** value missing **")
                 return
+            
+            if arg[2] in ['id', 'created_at', 'updated_at']:
+                return
+
             attr_name = args[2]
             attr_value = args[3]
-            obj = eval(class_name)(**storage.all()[obj_key])
+            obj_dict = storage.all()[obj_key].to_dict()
+            obj_dict.pop("__class__")
+            obj = eval(class_name)(**obj_dict)
             if hasattr(obj, attr_name):
                 type_name = type(attr_name)
                 attr_value = type_name(args[3])
             setattr(obj, attr_name, attr_value)
+            storage.all()[obj_key] = obj
             obj.save()
 
 
 if __name__ == '__main__':
     try:
-        MyCmd().cmdloop()
+        HBNBCommand().cmdloop()
     except (KeyboardInterrupt, EOFError):
         pass

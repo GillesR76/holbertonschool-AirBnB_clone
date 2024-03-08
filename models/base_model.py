@@ -61,10 +61,11 @@ class BaseModel:
         storage.save()
 
     def to_dict(self):
-        """Public instance method that returns a dictionary containing
-        all keys/values of __dict__ of the instance"""
+        """Return a dictionary representation of the instance."""
         dict_copy = self.__dict__.copy()
-        dict_copy["__class__"] = self.__class__.__name__
-        dict_copy["created_at"] = self.created_at.isoformat()
-        dict_copy["updated_at"] = self.updated_at.isoformat()
+        dict_copy['__class__'] = self.__class__.__name__
+        for attr in ['created_at', 'updated_at']:
+            if hasattr(self, attr) and isinstance(getattr(self, attr), datetime):
+                dict_copy[attr] = getattr(self, attr).isoformat()
+
         return dict_copy

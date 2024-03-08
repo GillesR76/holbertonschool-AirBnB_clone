@@ -40,6 +40,7 @@ class TestFileStorage(unittest.TestCase):
         self.storage._FileStorage__objects = {}
         self.storage.reload()
 
+
         base_model_key = "BaseModel." + base_model.id
         user_key = "User." + user.id
         self.assertIn(base_model_key, self.storage._FileStorage__objects)

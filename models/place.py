@@ -35,18 +35,6 @@ class Place(BaseModel):
     longitude = 0.0
     amenity_ids = []
 
-    def init(self, *args, **kwargs):
-        super().__init__(**kwargs)
-        if kwargs:
-            for key, value in kwargs.items():
-                if key in ['city_id', 'user_id', 'name', 'description', 'number_rooms',
-                           'number_bathrooms', 'max_guest', 'price_by_night',
-                           'latitude', 'longitude', 'amenity_ids']:
-                    if key != "__class":
-                        setattr(self, key, value)
-        else:
-            storage.new(self)
-
     def to_dict(self):
         """Return a dictionary representation of the instance."""
         dict_copy = super().to_dict().copy()
@@ -54,10 +42,10 @@ class Place(BaseModel):
             dict_copy.pop('class')
         except Exception:
             pass
-        dict_copy['_class'] = self.__class.__name
+        dict_copy['__class__'] = self.__class__.__name__
         for attr in ['city_id', 'user_id', 'name', 'description', 'number_rooms',
-                     'number_bathrooms', 'max_guest', 'price_by_night',
-                     'latitude', 'longitude', 'amenity_ids']:
-            if hasattr(self, attr) and isinstance(getattr(self, attr), str):
+                           'number_bathrooms', 'max_guest', 'price_by_night',
+                           'latitude', 'longitude', 'amenity_ids']:
+            if hasattr(self, attr):
                 dict_copy[attr] = getattr(self, attr)
         return dict_copy
