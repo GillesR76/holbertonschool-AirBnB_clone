@@ -33,3 +33,18 @@ class Place(BaseModel):
     latitude = 0.0
     longitude = 0.0
     amenity_ids = []
+
+    def to_dict(self):
+        """Return a dictionary representation of the instance."""
+        dict_copy = super().to_dict().copy()
+        try:
+            dict_copy.pop('class')
+        except Exception:
+            pass
+        dict_copy['__class__'] = self.__class__.__name__
+        for attr in ['city_id', 'user_id', 'name', 'description', 'number_rooms',
+                           'number_bathrooms', 'max_guest', 'price_by_night',
+                           'latitude', 'longitude', 'amenity_ids']:
+            if hasattr(self, attr):
+                dict_copy[attr] = getattr(self, attr)
+        return dict_copy
