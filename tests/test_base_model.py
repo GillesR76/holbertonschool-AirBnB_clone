@@ -11,7 +11,10 @@ class TestBaseModel(unittest.TestCase):
         self.model = BaseModel()
 
     def test_str(self):
-        expected_output = f"[BaseModel] ({self.model.id}) {self.model.__dict__}"
+        expected_output = (
+            f"[BaseModel] ({self.model.id}) "
+            f"{self.model.__dict__}"
+        )
         self.assertEqual(str(self.model), expected_output)
 
     def test_save(self):

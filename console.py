@@ -70,6 +70,46 @@ class MyCmd(cmd.Cmd):
                 else:
                     print("** no instance found **")
 
+    def do_update(self, arg):
+        """Updates an instance based on the class name and id
+        by adding or updating attribute
+        """
+        from models.base_model import BaseModel
+        from models.user import User
+        a_classes = {'BaseModel': BaseModel, 'User': User}
+        args = arg.split()
+        if len(args) == 0:
+            print("** class name missing **")
+            return
+        class_name = args[0]
+        if class_name not in a_classes.keys():
+            print("** class doesn't exist **")
+            return
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+        else:
+            class_id = args[1]
+            obj_key = f"{class_name}.{class_id}"
+            inst_keys = storage.all().keys()
+            if obj_key not in inst_keys:
+                print("** no instance found **")
+                return
+            if len(args) < 3:
+                print("** attribute name missing **")
+                return
+            if len(args) < 4:
+                print("** value missing **")
+                return
+            attr_name = args[2]
+            attr_value = args[3]
+            obj = eval(class_name)(**storage.all()[obj_key])
+            if hasattr(obj, attr_name):
+                type_name = type(attr_name)
+                attr_value = type_name(args[3])
+            setattr(obj, attr_name, attr_value)
+            obj.save()
+
 
 if __name__ == '__main__':
     try:
