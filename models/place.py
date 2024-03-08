@@ -5,6 +5,7 @@
 Class Place that inherits from BaseModel
 """
 from models.base_model import BaseModel
+from models import storage
 
 
 class Place(BaseModel):
@@ -33,3 +34,33 @@ class Place(BaseModel):
     latitude = 0.0
     longitude = 0.0
     amenity_ids = []
+
+    def init(self, *args, **kwargs):
+        if kwargs:
+            super().init()
+            for key, value in kwargs.items():
+                if key in ['city_id', 'user_id', 'name', 'description', 'number_rooms',
+                           'number_bathrooms', 'max_guest', 'price_by_night',
+                           'latitude', 'longitude', 'amenity_ids']:
+                    if key != "__class":
+                        setattr(self, key, value)
+        else:
+            storage.new(self)
+
+    def id(self):
+        return super().id
+
+    def to_dict(self):
+        """Return a dictionary representation of the instance."""
+        dict_copy = super().to_dict().copy()
+        try:
+            dict_copy.pop('class')
+        except Exception:
+            pass
+        dict_copy['_class'] = self.__class.__name
+        for attr in ['city_id', 'user_id', 'name', 'description', 'number_rooms',
+                     'number_bathrooms', 'max_guest', 'price_by_night',
+                     'latitude', 'longitude', 'amenity_ids']:
+            if hasattr(self, attr) and isinstance(getattr(self, attr), str):
+                dict_copy[attr] = getattr(self, attr)
+        return dict_copy
